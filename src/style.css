@@ -1,0 +1,11 @@
+/* Minimal global styles used by login / forgot-password screens */
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* keep the rest of component styles scoped inside the SFCs */
+
