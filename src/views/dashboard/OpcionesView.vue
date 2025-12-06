@@ -48,7 +48,6 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
-// Asegúrate de que la ruta a tus modales sea correcta según tu carpeta
 import RegistrarUsuarioModal from './RegistrarUsuarioModal.vue';
 import AdministrarUsuariosModal from './AdministrarUsuariosModal.vue';
 

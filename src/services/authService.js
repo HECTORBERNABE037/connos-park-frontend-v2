@@ -1,8 +1,8 @@
 import api from './api'
 
 const authService = {
-  login: (email, password) => {
-    return api.post('/token/', { email, password })
+  login: (username, password) => {
+    return api.post('/token/', { username, password })
   },
 
   refreshToken: (refreshToken) => {

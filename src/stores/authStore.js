@@ -1,17 +1,18 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import authService from '@/services/authService'
-import { useNotificationStore } from './notificationStore'
+
 
 export const useAuthStore = defineStore('auth', () => {
   // Inicializamos leyendo de localStorage
   const token = ref(localStorage.getItem('access_token') || null)
   const refreshToken = ref(localStorage.getItem('refresh_token') || null)
   
-  // CORRECCIÓN 1: Manejo seguro del JSON.parse para evitar errores si está vacío
+  // Recuperar usuario del storage de forma segura
   const getUserFromStorage = () => {
     try {
-      return JSON.parse(localStorage.getItem('user')) || null
+      const stored = localStorage.getItem('user');
+      return stored ? JSON.parse(stored) : null;
     } catch {
       return null
     }
@@ -23,33 +24,36 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => !!token.value)
   
-  // CORRECCIÓN 2: Usar 'rol_nombre' que viene de tu backend
+  // Computed para el ROL en respuesta del backend (rol_nombre)
   const userRole = computed(() => user.value?.rol_nombre || null)
   
+  // logica de roles
   const isAdmin = computed(() => userRole.value === 'Administrador')
   const isAccountant = computed(() => userRole.value === 'Contador')
   const isManager = computed(() => userRole.value === 'Encargado')
 
-  const login = async (email, password) => {
+  const login = async (username, password) => {
     isLoading.value = true
     error.value = null
     try {
-      const response = await authService.login(email, password)
+      // Llamamos al servicio
+      const response = await authService.login(username, password)
       
-      // Actualizamos estado en Pinia
+      // 1. Guardar en Estado de Pinia (Memoria)
       token.value = response.access
       refreshToken.value = response.refresh
-      user.value = response.user
+      user.value = response.user // <--- se guarda los datos del usuario
       
-      // Guardamos en LocalStorage
+      // 2. Guardar en LocalStorage (Persistencia)
       localStorage.setItem('access_token', response.access)
       localStorage.setItem('refresh_token', response.refresh)
+      // Guardamos el objeto user entero como string
       localStorage.setItem('user', JSON.stringify(response.user))
       
       return true
     } catch (err) {
       console.error(err)
-      error.value = err.message || 'Error al iniciar sesión'
+      error.value = 'Credenciales incorrectas o error de servidor'
       return false
     } finally {
       isLoading.value = false
@@ -60,9 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = null
     refreshToken.value = null
     user.value = null
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
-    localStorage.removeItem('user')
+    authService.logout() // Usamos la función del servicio para limpiar localStorage
   }
 
   const refreshAccessToken = async () => {

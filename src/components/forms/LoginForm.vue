@@ -4,19 +4,26 @@
       <img src="@/assets/images/LogoTransparenteBlancoRedi.png" alt="Logo" class="logo" />
       <h2>CONNOS PARK</h2>
       <h1>INICIAR SESIÓN</h1>
+      
       <form @submit.prevent="handleLogin" class="form">
         <div class="input-box">
-          <input type="text" v-model="username" placeholder="Usuario o correo" required />
+          <input type="text" v-model="username" placeholder="Usuario" required />
         </div>
         <div class="input-box">
           <input type="password" v-model="password" placeholder="Contraseña" required />
         </div>
-        <div v-if="error" class="error-message">{{ error }}</div>
-        <button type="submit" class="btn-primary">Iniciar Sesión</button>
+        
+        <div v-if="authStore.error" class="error-message">{{ authStore.error }}</div>
+        
+        <button type="submit" class="btn-primary" :disabled="authStore.isLoading">
+          {{ authStore.isLoading ? 'Entrando...' : 'Iniciar Sesión' }}
+        </button>
+        
         <router-link :to="{ name: 'PasswordReset' }" class="btn-secondary link-button">
-        ¿Olvidaste tu contraseña?
+          ¿Olvidaste tu contraseña?
         </router-link>
       </form>
+      
       <p class="terms">By registering you with our <a href="#">Terms and Conditions</a></p>
     </div>
   </div>
@@ -27,31 +34,20 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { useAuthStore } from '@/stores/authStore'
 
 const username = ref('')
 const password = ref('')
-const error = ref('')
 const router = useRouter()
+const authStore = useAuthStore()
 
 async function handleLogin() {
-  error.value = ''
-  try {
-    const response = await axios.post(
-      'https://connos-park-backend-d10312bcbd87.herokuapp.com/api/token/',
-      {
-        username: username.value,
-        password: password.value
-      }
-    )
-    const accessToken = response.data.access
-    const refreshToken = response.data.refresh
-    // Guardar en localStorage
-    localStorage.setItem('access_token', accessToken)
-    localStorage.setItem('refresh_token', refreshToken)
-    // Redirige a dashboard o página protegida
-    router.push('/dashboard')
-  } catch (err) {
-    error.value = 'Usuario o contraseña incorrectos'
+  // Usamos la acción del store en lugar de axios directo
+  const success = await authStore.login(username.value, password.value)
+  
+  if (success) {
+    // Si el login fue exitoso, el store ya tiene los datos del usuario
+    router.push('/dashboard')//Se redirige al dashboard principal
   }
 }
 
@@ -98,7 +94,7 @@ h1 {
   /* Corrige separación con el logo y subtítulo */
 }
 .error-message{
-  color: #c106ff;
+  color: #ff4d4d;
   font-size: 1rem;
   margin-bottom: 20px;
   font-weight: bold;
