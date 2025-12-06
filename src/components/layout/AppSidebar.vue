@@ -1,7 +1,7 @@
 <template>
   <aside class="sidebar-container">
     <div class="logo-area">
-      <img src="@/assets/images/LogoTransparenteBlancoRedi.png" alt="CONNOS Park" class="logo" />
+      <img src="@/assets/images/LogoTransparente.png" alt="CONNOS Park" class="logo" />
     </div>
 
     <nav class="menu">

@@ -42,12 +42,16 @@
           </div>
 
           <button 
+            v-if="authStore.canViewReports"
             class="btn-generar" 
             @click="generarPDF" 
             :disabled="!fechaInicio || !fechaFin || generating"
           >
             {{ generating ? 'Generando...' : '📄 Descargar Reporte PDF' }}
           </button>
+          <div v-else class="alert-box">
+            ⚠️ No tienes permisos para generar reportes financieros.
+          </div>
         </div>
 
       </div>
@@ -65,9 +69,13 @@ import contratoService from '@/services/contratoService';
 import operacionesService from '@/services/operacionesService';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { useAuthStore } from '../../stores/authStore';
 
 // Registrar componentes de Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+//inicialiazar AuthStore
+const authStore = useAuthStore();
 
 const loading = ref(true);
 const generating = ref(false);
@@ -96,6 +104,8 @@ const chartOptions = {
     }
   }
 };
+
+
 
 // --- CARGA DE DATOS COMPLETA ---
 onMounted(async () => {
@@ -242,7 +252,17 @@ const formatDate = (dateStr) => {
 </script>
 
 <style scoped>
-/* (Se mantienen los mismos estilos que ya tenías) */
+
+/* Estilo opcional para el mensaje de alerta */
+.alert-box {
+  background-color: #FFF4E5;
+  color: #663C00;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
 .reportes-container { padding: 20px; }
 h2 { font-size: 2rem; color: #333; margin-bottom: 20px; }
 

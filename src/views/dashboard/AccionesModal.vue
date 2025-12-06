@@ -42,7 +42,7 @@
               class="btn-pago" 
               @click="$emit('open-payment')"
             >
-              Realizar Pago
+              💳 Realizar Pago
             </button>
           </div>
         </div>

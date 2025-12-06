@@ -32,6 +32,12 @@ export const useAuthStore = defineStore('auth', () => {
   const isAccountant = computed(() => userRole.value === 'Contador')
   const isManager = computed(() => userRole.value === 'Encargado')
 
+  // Puede generar reportes si es Admin O es Contador
+  const canViewReports = computed(() => isAdmin.value || isAccountant.value)
+
+  // Puede gestionar usuarios (Solo Admin)
+  const canManageUsers = computed(() => isAdmin.value)
+
   const login = async (username, password) => {
     isLoading.value = true
     error.value = null
@@ -93,5 +99,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     logout,
     refreshAccessToken,
+    canViewReports,
+    canManageUsers
   }
 })
