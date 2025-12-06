@@ -1,7 +1,7 @@
 <template>
   <div class="login-bg">
     <div class="login-container">
-      <img src="@/assets/images/LogoTransparenteBlancoRedi.png" alt="Logo" class="logo" />
+      <img src="@/assets/images/logoTransparenteBlancoRedi.png" alt="Logo" class="logo" />
       <h2>CONNOS PARK</h2>
       <h1>INICIAR SESIÓN</h1>
       
