@@ -213,7 +213,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside));
 .result-info { font-size: 0.8rem; color: #888; }
 .no-results { padding: 15px; text-align: center; color: #999; font-style: italic; }
 
-/* ESTILOS USUARIO */
+/* ESTILO USUARIO */
 .user-profile {
   display: flex;
   align-items: center;
