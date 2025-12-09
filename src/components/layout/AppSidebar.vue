@@ -37,7 +37,7 @@
     <div class="spacer"></div>
 
     <div class="sidebar-footer">
-      <button class="btn-registrar" @click="modalState.showRegistrarCliente = true">
+      <button class="btn-registrar" @click="irARegistrarCliente">
         + Registrar cliente
       </button>
 
@@ -49,8 +49,21 @@
 </template>
 
 <script setup>
-// Importamos el estado global con la ruta correcta (stores con 's')
 import { modalState } from '@/stores/modalState';
+import { useRouter, useRoute } from 'vue-router'; // Importar router y route
+
+const router = useRouter();
+const route = useRoute();
+
+const irARegistrarCliente = () => {
+  // 1. Activar el flag del modal en el estado global
+  modalState.showRegistrarCliente = true;
+
+  // 2. Si no estamos en la vista de clientes, navegar hacia ella.
+  if (route.name !== 'Clientes') {
+    router.push('/dashboard/clientes');
+  }
+};
 </script>
 
 <style scoped>

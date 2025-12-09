@@ -30,8 +30,8 @@
           <label>Cajón asignado:</label>
           <select v-model="form.cajon_id" class="input-field" required>
             <option value="" disabled>Selecciona un cajón</option>
-            <option v-for="cajon in cajonesDisponibles" :key="cajon.id" :value="cajon.id">
-              Cajón {{ cajon.numero }} ({{ cajon.estado }})
+            <option v-for="cajon in cajonesFuncionales" :key="cajon.id" :value="cajon.id">
+              Cajón {{ cajon.numero }} - ({{ cajon.estado }}-{{ cajon.ocupado ? '🔴 Ocupado' : '🟢 Libre' }})
             </option>
           </select>
         </div>
@@ -44,9 +44,7 @@
         <div class="form-group full-width">
           <label>Esquema de pago (Monto Mensual):</label>
           <select v-model="form.monto" class="input-field" required>
-            <option :value="500">Mensual ($500.00)</option>
-            <option :value="300">Quincenal ($300.00)</option>
-            <option :value="1500">Trimestral ($1500.00)</option>
+            <option :value="450">Mensual ($450.00)</option>
           </select>
         </div>
 
@@ -82,7 +80,7 @@ const form = reactive({
   correo: '',
   cajon_id: '',
   fechaInicio: new Date().toISOString().split('T')[0], // Hoy por defecto
-  monto: 500
+  monto: 450
 });
 
 // Cargar cajones al abrir el modal
@@ -97,9 +95,10 @@ onMounted(async () => {
 });
 
 // Filtramos visualmente (opcional, si quieres mostrar solo los funcionales)
-const cajonesDisponibles = computed(() => {
+const cajonesFuncionales = computed(() => {
   return cajonesList.value.filter(c => c.estado === 'FUNCIONAL');
 });
+
 
 // --- LÓGICA PRINCIPAL DE GUARDADO ---
 const handleRegistrar = async () => {

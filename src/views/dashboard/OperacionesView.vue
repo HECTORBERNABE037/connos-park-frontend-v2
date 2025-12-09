@@ -49,6 +49,7 @@
     <PagoModal 
       v-if="showPago" 
       :contrato-id="itemSeleccionado?.contrato?.id"
+      :monto-contrato="itemSeleccionado?.contrato?.monto_mensual"
       @close="showPago = false" 
       @pago-registrado="handlePagoExitoso"
     />

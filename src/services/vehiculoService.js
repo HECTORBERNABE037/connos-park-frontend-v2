@@ -3,6 +3,14 @@ import api from './api'
 export default {
   getVehiculos() {
     return api.get('/vehiculos/')
+  },
+  
+  // metodo para actaulizar datos del vehiculo
+  updateVehiculo(id, data) {
+    return api.patch(`/vehiculos/${id}/`, data)
+  },
+
+  createVehiculo(data) {
+    return api.post('/vehiculos/', data)
   }
-  // Aquí podrías agregar createVehiculo si decides agregarlo desde el modal después
 }

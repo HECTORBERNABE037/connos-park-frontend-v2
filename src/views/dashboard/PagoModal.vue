@@ -48,19 +48,27 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue'; // Importar onMounted
 import pagoService from '@/services/pagoService';
 
-const props = defineProps(['contratoId']);
+// Agregamos 'montoContrato' a las props
+const props = defineProps(['contratoId', 'montoContrato']);
 const emit = defineEmits(['close', 'pago-registrado']);
 const loading = ref(false);
 
 const form = reactive({
-  monto: 500.00,
+  monto: 0, // Se inicializa en 0 o vacío
   fecha_pago: new Date().toISOString().split('T')[0],
   periodo_inicio: '',
   periodo_fin: '',
   comentario: ''
+});
+
+// Al montar, si viene un monto sugerido del contrato, lo usamos
+onMounted(() => {
+  if (props.montoContrato) {
+    form.monto = props.montoContrato;
+  }
 });
 
 const guardarPago = async () => {
@@ -72,7 +80,7 @@ const guardarPago = async () => {
   loading.value = true;
   try {
     const dataToSend = {
-      contrato: props.contratoId, // ID del contrato que viene de OperacionesView
+      contrato: props.contratoId,
       ...form
     };
 
@@ -90,7 +98,7 @@ const guardarPago = async () => {
 </script>
 
 <style scoped>
-/* Estilos para que se vea blanco y limpio como pediste */
+/* ... (Estilos iguales al anterior) ... */
 .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.3); display: flex; justify-content: center; align-items: center; z-index: 2000; }
 .modal-card { background: white; border-radius: 15px; padding: 25px; width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 .modal-header h3 { text-align: center; margin: 0 0 20px 0; color: #333; font-size: 1.3rem; }

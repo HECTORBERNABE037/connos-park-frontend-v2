@@ -62,12 +62,12 @@
                 ></div>
               </div>
 
-              <div class="assign-control">
+              <!-- <div class="assign-control">
                 <label>Cliente Asignado</label>
                 <select class="input-field" disabled>
                   <option selected>{{ data.clienteNombre || 'Sin Asignar' }}</option>
                 </select>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
